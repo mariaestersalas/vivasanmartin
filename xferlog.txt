@@ -1,0 +1,36 @@
+recibiendo archivo "/Users/Public/Desktop/Mozilla Firefox.lnk" desde sitio "C" como archivo "Mozilla Firefox.lnk"
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+- -
+! No puede obtener entrada host "C"
+! Conexión fallida C
+! Fracaso al conectar a C
+! Fracaso al conectar a C

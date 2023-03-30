@@ -1,0 +1,426 @@
+<html>
+
+<head>
+<title>EDUCACION</title>
+<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
+<meta name="Microsoft Border" content="none">
+<script LANGUAGE="JavaScript" FPTYPE="dynamicanimation">
+<!--
+  // If you want to change this script, you must also make the following
+  // changes so that FrontPage will not overwrite your new script.
+  // In the script tag, change type="dynamicanimation" to type="mydynamicanimation"
+  // In the first script statement, change "dynamicanimation" to "mydynamicanimation"
+  // Throughout the HTML content, change dynamicanimation= to mydynamicanimation=
+  // Change function dynAnimation to function mydynAnimation
+  // In the body tag, change onload="dynAnimation()" to onload="mydynAnimation()"
+  dynamicanimAttr = "dynamicanimation"
+  animateElements = new Array()
+  currentElement = 0
+  speed = 0
+  stepsZoom = 8
+  stepsWord = 8
+  stepsFly = 12
+  stepsSpiral = 16
+  steps = stepsZoom
+  step = 0
+  outString = ""
+  function dynAnimation()
+  {
+    var ms = navigator.appVersion.indexOf("MSIE")
+    ie4 = (ms>0) && (parseInt(navigator.appVersion.substring(ms+5, ms+6)) >= 4)
+    if(!ie4)
+    {
+      if((navigator.appName == "Netscape") &&
+         (parseInt(navigator.appVersion.substring(0, 1)) >= 4))
+      {
+        for (index=document.layers.length-1; index >= 0; index--)
+        {
+            layer=document.layers[index]
+            if (layer.left==10000)
+                layer.left=0
+        }
+      }
+      return
+    }
+    for (index=document.all.length-1; index >= document.body.sourceIndex; index--)
+    {
+      el = document.all[index]
+      animation = el.getAttribute(dynamicanimAttr, false)
+      if(null != animation)
+      {
+        if(animation == "dropWord" || animation == "flyTopRightWord" || animation == "flyBottomRightWord")
+        {
+          ih = el.innerHTML
+          outString = ""
+          i1 = 0
+          iend = ih.length
+          while(true)
+          {
+            i2 = startWord(ih, i1)
+            if(i2 == -1)
+              i2 = iend
+            outWord(ih, i1, i2, false, "")
+            if(i2 == iend)
+              break
+            i1 = i2
+            i2 = endWord(ih, i1)
+            if(i2 == -1)
+              i2 = iend
+            outWord(ih, i1, i2, true, animation)
+            if(i2 == iend)
+              break
+            i1 = i2
+          }
+          document.all[index].innerHTML = outString
+          document.all[index].style.posLeft = 0
+          document.all[index].setAttribute(dynamicanimAttr, null)
+        }
+        if(animation == "zoomIn" || animation == "zoomOut")
+        {
+          ih = el.innerHTML
+          outString = "<SPAN " + dynamicanimAttr + "=\"" + animation + "\" style=\"position: relative; left: 10000;\">"
+          outString += ih
+          outString += "</SPAN>"
+          document.all[index].innerHTML = outString
+          document.all[index].style.posLeft = 0
+          document.all[index].setAttribute(dynamicanimAttr, null)
+        }
+      }
+    }
+    i = 0
+    for (index=document.body.sourceIndex; index < document.all.length; index++)
+    {
+      el = document.all[index]
+      animation = el.getAttribute(dynamicanimAttr, false)
+      if (null != animation)
+      {
+        if(animation == "flyLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = 0
+        }
+        else if(animation == "flyRight")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = 0
+        }
+        else if(animation == "flyTop" || animation == "dropWord")
+        {
+          el.style.posLeft = 0
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyBottom")
+        {
+          el.style.posLeft = 0
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "flyTopLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyTopRight" || animation == "flyTopRightWord")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyBottomLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "flyBottomRight" || animation == "flyBottomRightWord")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "spiral")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "zoomIn")
+        {
+          el.style.posLeft = 10000
+          el.style.posTop = 0
+        }
+        else if(animation == "zoomOut")
+        {
+          el.style.posLeft = 10000
+          el.style.posTop = 0
+        }
+        else
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = 0
+        }
+        el.initLeft = el.style.posLeft
+        el.initTop = el.style.posTop
+        animateElements[i++] = el
+      }
+    }
+    window.setTimeout("animate();", speed)
+  }
+  function offsetLeft(el)
+  {
+    x = el.offsetLeft
+    for (e = el.offsetParent; e; e = e.offsetParent)
+      x += e.offsetLeft;
+    return x
+  } 
+  function offsetTop(el)
+  {
+    y = el.offsetTop
+    for (e = el.offsetParent; e; e = e.offsetParent)
+      y += e.offsetTop;
+    return y
+  } 
+  function startWord(ih, i)
+  {
+    for(tag = false; i < ih.length; i++)
+    {
+      c = ih.charAt(i)
+      if(c == '<')
+        tag = true
+      if(!tag)
+        return i
+      if(c == '>')
+        tag = false
+    }
+    return -1
+  }
+  function endWord(ih, i)
+  {
+    nonSpace = false
+    space = false
+    while(i < ih.length)
+    {
+      c = ih.charAt(i)
+      if(c != ' ')
+        nonSpace = true
+      if(nonSpace && c == ' ')
+        space = true
+      if(c == '<')
+        return i
+      if(space && c != ' ')
+        return i
+      i++
+    }
+    return -1
+  }
+  function outWord(ih, i1, i2, dyn, anim)
+  {
+    if(dyn)
+      outString += "<SPAN " + dynamicanimAttr + "=\"" + anim + "\" style=\"position: relative; left: 10000;\">"
+    outString += ih.substring(i1, i2)
+    if(dyn)
+      outString += "</SPAN>"
+  }
+  function animate()
+  {
+    el = animateElements[currentElement]
+    animation = el.getAttribute(dynamicanimAttr, false)
+    step++
+    if(animation == "spiral")
+    {
+      steps = stepsSpiral
+      v = step/steps
+      rf = 1.0 - v
+      t = v * 2.0*Math.PI
+      rx = Math.max(Math.abs(el.initLeft), 200)
+      ry = Math.max(Math.abs(el.initTop),  200)
+      el.style.posLeft = Math.ceil(-rf*Math.cos(t)*rx)
+      el.style.posTop  = Math.ceil(-rf*Math.sin(t)*ry)
+    }
+    else if(animation == "zoomIn")
+    {
+      steps = stepsZoom
+      el.style.fontSize = Math.ceil(50+50*step/steps) + "%"
+      el.style.posLeft = 0
+    }
+    else if(animation == "zoomOut")
+    {
+      steps = stepsZoom
+      el.style.fontSize = Math.ceil(100+200*(steps-step)/steps) + "%"
+      el.style.posLeft = 0
+    }
+    else
+    {
+      steps = stepsFly
+      if(animation == "dropWord" || animation == "flyTopRightWord" || animation == "flyBottomRightWord")
+        steps = stepsWord
+      dl = el.initLeft / steps
+      dt = el.initTop  / steps
+      el.style.posLeft = el.style.posLeft - dl
+      el.style.posTop = el.style.posTop - dt
+    }
+    if (step >= steps) 
+    {
+      el.style.posLeft = 0
+      el.style.posTop = 0
+      currentElement++
+      step = 0
+    }
+    if(currentElement < animateElements.length)
+      window.setTimeout("animate();", speed)
+  }
+//-->
+</script></head>
+
+<body bgcolor="#C0C0C0" onload="dynAnimation()">
+
+<p>&nbsp;</p>
+
+<p align="center"><font face="Times New Roman" size="4" color="#000000"><strong><em><u>Educación</u></em></strong></font></p>
+
+<p align="center"><strong><font face="MS Sans Serif" size="2" color="#FFFFFF"><a
+href="#nivel inicial"
+style="background-color: rgb(128,0,0); color: rgb(255,255,255); text-decoration: none">NIVEL
+INICIAL</a></font><font face="MS Sans Serif" size="2" color="#0000FF">&nbsp;&nbsp; &nbsp; <a
+href="#e.g.b."
+style="background-color: rgb(128,0,0); color: rgb(255,255,255); text-decoration: none">E.G.B.</a>&nbsp;
+&nbsp;&nbsp;&nbsp; <a href="#polimodal"
+style="background-color: rgb(128,0,0); color: rgb(255,255,255); text-decoration: none">POLIMODAL</a>&nbsp;
+&nbsp;&nbsp;&nbsp; <a href="#terciario"
+style="background-color: rgb(128,0,0); color: rgb(255,255,255); text-decoration: none">TERCIARIO</a>
+&nbsp;&nbsp; &nbsp; <a href="#universitario"
+style="background-color: rgb(128,0,0); color: rgb(255,255,255); text-decoration: none">UNIVERSITARIO</a></font></strong></p>
+
+<p><a name="NIVEL INICIAL"><u><font color="#000080"><strong>NIVEL INICIAL<br>
+</strong></font></u></a>
+
+<ul>
+  <li><strong><a href="aviso1.htm#Flores y florcitas" style="color: rgb(0,128,128)"
+    target="_top">Jardín de Infantes &quot;Flores y Florcitas&quot; - Preescolar</a><br>
+    </strong><font color="#008080">Biarritz y Aristóbulo del Valle - José L. Suárez -
+    Tel./Fax: 4729-4226</font></li>
+</ul>
+
+<p><a name="E.G.B."><strong><font color="#000080"><u>E.G.B.</u></font></strong> </a>
+
+<ul>
+  <li><font color="#008080"><strong><u><a href="aviso1.htm#AStorni" target="_top"
+    style="color: rgb(0,128,128)">Colegio &quot;Alfonsina Storni&quot;</a><br>
+    </u></strong>Biarritz y Aristóbulo del Valle - José L. Suárez - Tel./Fax: 4729-4226</font></li>
+</ul>
+
+<ul>
+  <li dynamicanimation="flyTop"
+  style="position: relative !important; left: 10000 !important"><font color="#008080"><a
+    href="aviso1.htm#Vanesa Bustamante" target="_top" style="color: rgb(0,128,128)"><u><strong>Profesora
+    de Contabilidad y Matemática</strong></u> (</a>Clases Particulares o Grupales)<br>
+    Vanesa Bustamante - Tel. 4501-7765<br>
+    </font></li>
+  <li dynamicanimation="flyRight"
+  style="position: relative !important; left: 10000 !important"><font color="#008080"><strong><a
+    target="_top" href="alpha.htm"><span style="color: rgb(0,128,128)"><u>Instituto de
+    Enseñanza &quot;Alpha&quot;</u></span></a><br>
+    </strong>Tel. 4764-2939</font></li>
+</ul>
+
+<p dynamicanimation="flyRight"
+style="position: relative !important; left: 10000 !important">&nbsp;</p>
+
+<p><a name="POLIMODAL"><strong><font color="#000080"><u>POLIMODAL</u></font></strong> </a>
+
+<ul>
+  <li><font color="#008080"><strong><u><a href="aviso1.htm#AStorni" target="_top"
+    style="color: rgb(0,128,128)">Colegio &quot;Alfonsina Storni&quot;</a><br>
+    </u></strong>Biarritz y Aristóbulo del Valle - José L. Suárez - Tel./Fax: 4729-4226<br>
+    </font></li>
+</ul>
+
+<ul>
+  <li dynamicanimation="flyTop"
+  style="position: relative !important; left: 10000 !important"><p
+    style="color: rgb(0,128,128)"><font color="#008080"><a href="aviso1.htm#anesa Bustamante"
+    target="_top"><span style="color: rgb(0,128,128)"><u><strong>Profesora de Contabilidad y
+    Matemática</strong></u></span> </a>(</font>Clases Particulares o Grupales)<br>
+    Vanesa Bustamante - Tel. 4501-7765<br>
+    </p>
+  </li>
+  <li dynamicanimation="flyTop"
+  style="position: relative !important; left: 10000 !important"><p
+    style="color: rgb(0,128,128)"><font color="#008080"><strong><a href="alpha.htm"
+    target="_top"><span style="color: rgb(0,128,128)"><u>Instituto de Enseñanza
+    &quot;Alpha&quot;</u></span></a><br>
+    </strong>Tel. 4764-2939</font></p>
+  </li>
+</ul>
+
+<p><a name="TERCIARIO"><font color="#000080"><u><strong>TERCIARIO</strong></u></font> </a>
+
+<ul>
+  <li dynamicanimation="flyTop"
+  style="position: relative !important; left: 10000 !important"><p
+    style="color: rgb(0,128,128)"><a href="aviso1.htm#Vanesa Bustamante" target="_top"><font
+    color="#008080"><u><strong>Profesora de Contabilidad y Matemática</strong></u> (</font></a>Clases
+    Particulares o Grupales)<br>
+    Vanesa Bustamante - Tel. 4501-7765</p>
+  </li>
+</ul>
+
+<ul>
+  <li dynamicanimation="flyRight"
+  style="position: relative !important; left: 10000 !important"><p
+    style="color: rgb(0,128,128)"><font color="#008080"><strong><a href="alpha.htm"
+    target="_top"><span style="color: rgb(0,128,128)"><u>Instituto de Enseñanza
+    &quot;Alpha&quot;</u></span></a><br>
+    </strong>Tel. 4768-4798</font></p>
+  </li>
+</ul>
+
+<p style="color: rgb(0,128,128)"><a name="UNIVERSITARIO"><u><strong><font color="#000080">UNIVERSITARIO</font></strong></u>
+</a></p>
+
+<p style="color: rgb(0,128,128)"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Universidad de Buenos Aires</strong> 
+
+<ul>
+  <li><p style="color: rgb(0,128,128)">Facultad de Arquitectura, Diseño y Urbanismo<br>
+    <a href="http://www.fadu.uba.ar"><span style="color: rgb(0,0,255)"><u>www.fadu.uba.ar</u></span></a></p>
+  </li>
+  <li><p style="color: rgb(0,128,128)">Facultad de Ciencias Económicas<br>
+    <span style="color: rgb(0,0,255)"><a href="http://www.econ.uba.ar">www.econ.uba.ar</a><br>
+    <font color="#008080">Consejo Profesional de Ciencias Económicas de la Capital Federal</font><br>
+    <a href="http://www.cpcecf.org.ar">www.cpcecf.org.ar</a> </span></p>
+  </li>
+  <li><p style="color: rgb(0,128,128)">Facultad de Filosofia y Letras<br>
+    <a href="http://www.filo.uba.ar"><span style="color: rgb(0,0,255)">www.filo.uba.ar</span></a></p>
+  </li>
+  <li><p style="color: rgb(0,128,128)">Facultad de Psicologia<br>
+    <a href="http://www.psi.uba.ar"><span style="color: rgb(0,0,255)">www.psi.uba.ar</span></a></p>
+  </li>
+  <li><p style="color: rgb(0,128,128)">Matematica<br>
+    <a href="http://www.dm.uba.ar"><span style="color: rgb(0,0,255)">www.dm.uba.ar</span></a></p>
+  </li>
+  <li><p style="color: rgb(0,128,128)">Facultad de Medicina<br>
+    <a href="http://www.fmed.uba.ar"><span style="color: rgb(0,0,255)">www.fmed.uba.ar</span></a></p>
+  </li>
+</ul>
+
+<ul>
+  <li dynamicanimation="flyRight"
+  style="position: relative !important; left: 10000 !important"><p
+    style="color: rgb(0,128,128)"><font color="#008080"><strong><a href="alpha.htm"
+    target="_top"><span style="color: rgb(0,128,128)"><u>Instituto de Enseñanza
+    &quot;Alpha&quot;</u></span></a><br>
+    </strong>Tel. 4768-4798</font></p>
+  </li>
+</ul>
+
+<p style="color: rgb(0,128,128)" align="center">&nbsp;</p>
+
+<p style="color: rgb(0,128,128)" align="center"><big>&nbsp;&nbsp;</big><span
+style="TEXT-DECORATION: none; TEXT-TRANSFORM: none"> </span><a href="index.htm"
+style="color: rgb(128,0,0); text-decoration: overline"><strong><font face="MS Sans Serif"
+size="1">VOLVER A PAGINA PRINCIPAL</font></strong></a></p>
+
+<p style="color: rgb(0,128,128)" align="center"><a href="mailto:info@vivasanmartin.com.ar"><img
+src="images/mail4.gif" width="32" height="35" alt="COMUNIQUESE CON NOSOTROS" border="0"></a></p>
+
+<p style="color: rgb(0,128,128)" align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+</body>
+</html>

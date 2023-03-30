@@ -1,0 +1,640 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Detalles de desayunos</title>
+<script LANGUAGE="JavaScript" FPTYPE="dynamicanimation">
+<!--
+  // If you want to change this script, you must also make the following
+  // changes so that FrontPage will not overwrite your new script.
+  // In the script tag, change type="dynamicanimation" to type="mydynamicanimation"
+  // In the first script statement, change "dynamicanimation" to "mydynamicanimation"
+  // Throughout the HTML content, change dynamicanimation= to mydynamicanimation=
+  // Change function dynAnimation to function mydynAnimation
+  // In the body tag, change onload="dynAnimation()" to onload="mydynAnimation()"
+  dynamicanimAttr = "dynamicanimation"
+  animateElements = new Array()
+  currentElement = 0
+  speed = 0
+  stepsZoom = 8
+  stepsWord = 8
+  stepsFly = 12
+  stepsSpiral = 16
+  steps = stepsZoom
+  step = 0
+  outString = ""
+  function dynAnimation()
+  {
+    var ms = navigator.appVersion.indexOf("MSIE")
+    ie4 = (ms>0) && (parseInt(navigator.appVersion.substring(ms+5, ms+6)) >= 4)
+    if(!ie4)
+    {
+      if((navigator.appName == "Netscape") &&
+         (parseInt(navigator.appVersion.substring(0, 1)) >= 4))
+      {
+        for (index=document.layers.length-1; index >= 0; index--)
+        {
+            layer=document.layers[index]
+            if (layer.left==10000)
+                layer.left=0
+        }
+      }
+      return
+    }
+    for (index=document.all.length-1; index >= document.body.sourceIndex; index--)
+    {
+      el = document.all[index]
+      animation = el.getAttribute(dynamicanimAttr, false)
+      if(null != animation)
+      {
+        if(animation == "dropWord" || animation == "flyTopRightWord" || animation == "flyBottomRightWord")
+        {
+          ih = el.innerHTML
+          outString = ""
+          i1 = 0
+          iend = ih.length
+          while(true)
+          {
+            i2 = startWord(ih, i1)
+            if(i2 == -1)
+              i2 = iend
+            outWord(ih, i1, i2, false, "")
+            if(i2 == iend)
+              break
+            i1 = i2
+            i2 = endWord(ih, i1)
+            if(i2 == -1)
+              i2 = iend
+            outWord(ih, i1, i2, true, animation)
+            if(i2 == iend)
+              break
+            i1 = i2
+          }
+          document.all[index].innerHTML = outString
+          document.all[index].style.posLeft = 0
+          document.all[index].setAttribute(dynamicanimAttr, null)
+        }
+        if(animation == "zoomIn" || animation == "zoomOut")
+        {
+          ih = el.innerHTML
+          outString = "<SPAN " + dynamicanimAttr + "=\"" + animation + "\" style=\"position: relative; left: 10000;\">"
+          outString += ih
+          outString += "</SPAN>"
+          document.all[index].innerHTML = outString
+          document.all[index].style.posLeft = 0
+          document.all[index].setAttribute(dynamicanimAttr, null)
+        }
+      }
+    }
+    i = 0
+    for (index=document.body.sourceIndex; index < document.all.length; index++)
+    {
+      el = document.all[index]
+      animation = el.getAttribute(dynamicanimAttr, false)
+      if (null != animation)
+      {
+        if(animation == "flyLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = 0
+        }
+        else if(animation == "flyRight")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = 0
+        }
+        else if(animation == "flyTop" || animation == "dropWord")
+        {
+          el.style.posLeft = 0
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyBottom")
+        {
+          el.style.posLeft = 0
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "flyTopLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyTopRight" || animation == "flyTopRightWord")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "flyBottomLeft")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "flyBottomRight" || animation == "flyBottomRightWord")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)+document.body.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)+document.body.offsetHeight
+        }
+        else if(animation == "spiral")
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = document.body.scrollTop-offsetTop(el)-el.offsetHeight
+        }
+        else if(animation == "zoomIn")
+        {
+          el.style.posLeft = 10000
+          el.style.posTop = 0
+        }
+        else if(animation == "zoomOut")
+        {
+          el.style.posLeft = 10000
+          el.style.posTop = 0
+        }
+        else
+        {
+          el.style.posLeft = 10000-offsetLeft(el)-el.offsetWidth
+          el.style.posTop = 0
+        }
+        el.initLeft = el.style.posLeft
+        el.initTop = el.style.posTop
+        animateElements[i++] = el
+      }
+    }
+    window.setTimeout("animate();", speed)
+  }
+  function offsetLeft(el)
+  {
+    x = el.offsetLeft
+    for (e = el.offsetParent; e; e = e.offsetParent)
+      x += e.offsetLeft;
+    return x
+  } 
+  function offsetTop(el)
+  {
+    y = el.offsetTop
+    for (e = el.offsetParent; e; e = e.offsetParent)
+      y += e.offsetTop;
+    return y
+  } 
+  function startWord(ih, i)
+  {
+    for(tag = false; i < ih.length; i++)
+    {
+      c = ih.charAt(i)
+      if(c == '<')
+        tag = true
+      if(!tag)
+        return i
+      if(c == '>')
+        tag = false
+    }
+    return -1
+  }
+  function endWord(ih, i)
+  {
+    nonSpace = false
+    space = false
+    while(i < ih.length)
+    {
+      c = ih.charAt(i)
+      if(c != ' ')
+        nonSpace = true
+      if(nonSpace && c == ' ')
+        space = true
+      if(c == '<')
+        return i
+      if(space && c != ' ')
+        return i
+      i++
+    }
+    return -1
+  }
+  function outWord(ih, i1, i2, dyn, anim)
+  {
+    if(dyn)
+      outString += "<SPAN " + dynamicanimAttr + "=\"" + anim + "\" style=\"position: relative; left: 10000;\">"
+    outString += ih.substring(i1, i2)
+    if(dyn)
+      outString += "</SPAN>"
+  }
+  function animate()
+  {
+    el = animateElements[currentElement]
+    animation = el.getAttribute(dynamicanimAttr, false)
+    step++
+    if(animation == "spiral")
+    {
+      steps = stepsSpiral
+      v = step/steps
+      rf = 1.0 - v
+      t = v * 2.0*Math.PI
+      rx = Math.max(Math.abs(el.initLeft), 200)
+      ry = Math.max(Math.abs(el.initTop),  200)
+      el.style.posLeft = Math.ceil(-rf*Math.cos(t)*rx)
+      el.style.posTop  = Math.ceil(-rf*Math.sin(t)*ry)
+    }
+    else if(animation == "zoomIn")
+    {
+      steps = stepsZoom
+      el.style.fontSize = Math.ceil(50+50*step/steps) + "%"
+      el.style.posLeft = 0
+    }
+    else if(animation == "zoomOut")
+    {
+      steps = stepsZoom
+      el.style.fontSize = Math.ceil(100+200*(steps-step)/steps) + "%"
+      el.style.posLeft = 0
+    }
+    else
+    {
+      steps = stepsFly
+      if(animation == "dropWord" || animation == "flyTopRightWord" || animation == "flyBottomRightWord")
+        steps = stepsWord
+      dl = el.initLeft / steps
+      dt = el.initTop  / steps
+      el.style.posLeft = el.style.posLeft - dl
+      el.style.posTop = el.style.posTop - dt
+    }
+    if (step >= steps) 
+    {
+      el.style.posLeft = 0
+      el.style.posTop = 0
+      currentElement++
+      step = 0
+    }
+    if(currentElement < animateElements.length)
+      window.setTimeout("animate();", speed)
+  }
+//-->
+</script></head>
+
+<body bgcolor="#808000" onload="dynAnimation()" link="#808000" vlink="#808000" alink="#808000" language="Javascript1.2">
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="mailto:mariter4798@ciudad.com.ar,%20vnitz@hotmail.com" style="text-decoration: none; background-color: rgb(128,128,0); color: rgb(128,128,0); border: medium none"><img src="images/mail4.gif" alt="mail4.gif (20906 bytes)" WIDTH="50" HEIGHT="66"></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="border: medium double rgb(255,255,255)"><img src="images/logo2.jpg" alt="logo2.jpg (7138 bytes)" WIDTH="74" HEIGHT="81"></span></p>
+
+<p align="center"><font face="Monotype Corsiva" size="7" color="#FFFFFF"><strong><em>Desayunos
+a Domicilio</em></strong></font></p>
+
+<p align="center"><strong><em><font face="Monotype Corsiva" size="5" color="#FFFFFF"><br>
+4501-7765/4768-4798<br>
+155388-2247/155333-0155</font></em></strong></p>
+<b><font FACE="Monotype Corsiva" SIZE="4">
+
+<p align="center"></font><font face="Monotype Corsiva" size="5" color="#FFFFFF">(<a name="1 ) Desayuno Margon: ($ 110)"> 1 ) Desayuno Margon: ($ 
+500)</a></font></b>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="images/DESAYUNO_MARGON.jpg"><img border="6" src="images/DESAYUNO_MARGON_small.jpg" xthumbnail-orig-image="images/DESAYUNO_MARGON.jpg" width="100" height="103" style="border: 4px solid #FFFFFF; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp; <a href="mailto:mariter4798@ciudad.com.ar,%20vnitz@hotmail.com.ar" style="text-decoration: none; background-color: rgb(128,128,0); color: rgb(128,128,0); border: medium none"><img src="images/HH01580A.gif" alt="HH01580A.gif (1542 bytes)" WIDTH="58" HEIGHT="51"></a><strong><font color="#FFFFFF">pedidos</font></strong><font SIZE="2"></p>
+</font><div align="center"><center>
+
+<table border="4" width="553" height="182">
+  <tr>
+    <td width="296" height="176" align="left"><p align="left"><span style="line-height: -12px"><font color="#FFFFFF" face="Arial" size="3">Bandeja de Madera y Mimbre<br>
+    Individual de Tela &nbsp;<br>
+    Servilleta de Tela<br>
+    Porta Servilleta<br>
+    Taza de Cerámica<br>
+    Cuchara de acero inoxidable<br>
+    Untador de acero inoxidable&nbsp;<br>
+    Bocadito de Chocolate y Dulce de Leche<br>
+    Barra de Cereal<br>
+    Porción especial dulce<br>
+    Galletitas dulces artesanales<br>
+    Alfajorcitos de Maicena<br>
+    Pasta Frola</font></span></td>
+    <td width="245" height="176" align="left"><font color="#FFFFFF" face="Arial" size="3">Brownie<span style="line-height: -12px"><br>
+    Magdalenas<br>
+    Chocolate Personalizado 9gs.<br>
+    Tostadas<br clear="all">
+    Galletitas de Agua<br>
+    Mermelada en Frasco<br>
+    Dulce de Leche en Frasco<br>
+    Manteca <br>
+    Jugo de Frutas<br>
+    Leche en sobre<br>
+    Te, Mate Cocido y Café<br>
+    Azúcar y Edulcorante<br>
+    Celofán<br>
+    Moño</span></font></td>
+  </tr>
+</table>
+</center></div>
+
+<p align="left"><font face="Arial" size="2" color="#FFFFFF"><span style="line-height: -12px"><u>Opcionales:<br>
+</u>Los cuatro desayunos pueden:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; · ir&nbsp; en bandejas rectangulares,
+circulares o en forma de corazón. (sin costo)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+· chocolate personalizado familiar (100Gs) $ 30.-<br>
+<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp; </b></span></font></p>
+
+<p align="left">&nbsp;</p>
+
+<p align="center"><span style="line-height: -12px"><font size="1" face="Arial"><img src="images/chocolate_familiar.jpg" alt="chocolate familiar.jpg (15801 bytes)" WIDTH="279" HEIGHT="187"></font><font color="#FFFFFF" face="Arial" size="1"> &nbsp;</font></span></p>
+
+<blockquote>
+  <blockquote>
+    <p><b><font color="#FFFFFF" face="Arial" size="1"><span style="line-height: -12px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></font></b><font SIZE="4"></p>
+    <p align="center"></font><strong><font face="MS Sans Serif" size="1" color="#400000"><a href="desayunos.htm#155388-2247/155333-0155" target="_top"><span style="color: rgb(64,0,0); text-decoration: underline; border-top: medium none rgb(64,0,0)">VOLVER
+    AL INICIO</span></a></font></strong><b><font FACE="Monotype Corsiva" SIZE="4"></p>
+    <p align="center"></font></b><marquee style="font-family: Times New Roman; font-size: 14pt; background-color: rgb(0,128,128); color: rgb(255,255,255)" align="middle" border="0" bgcolor="#008080" scrollamount="4" behavior="alternate" width="662" height="21">Publicite aquí!, Ud. también puede ser parte de este gran emprendimiento</marquee><b><font FACE="Monotype Corsiva" SIZE="4"></p>
+    <p align="center">&nbsp;</p>
+  </blockquote>
+</blockquote>
+</font></b>
+
+<p><span style="line-height: -12px"><font color="#FFFFFF"><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></span></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p><font face="Monotype Corsiva" size="4" color="#FFFFFF"><b><a name="( 2 ) Desayuno Margon Especial: ($ 130)">( 2 ) Desayuno Margon Especial: ($ 
+520)</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="images/DSCN1247ESPE.jpg"><img src="images/DSCN1247ESPE_small.jpg" alt="DSCN1247ESPE.jpg (93866 bytes)" style="border: medium dotted rgb(255,255,255)" border="2" WIDTH="100" HEIGHT="75"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="mailto:mariter4798@ciudad.com.ar,%20vnitz@hotmail.com.ar" style="text-decoration: none; background-color: rgb(128,128,0); color: rgb(128,128,0); border: medium none"><img src="images/HH01580A.gif" alt="HH01580A.gif (1542 bytes)" WIDTH="58" HEIGHT="51"></a><strong><font color="#FFFFFF">pedidos</font></strong></p>
+<div align="center"><center>
+
+<table border="4" width="566">
+  <tr>
+    <td width="513" align="left"><font face="Arial" size="3" color="#FFFFFF">Bandeja de Madera
+    y Mimbre<br>
+    Individual de Tela<br>
+    Servilleta de Tela<br>
+    Porta Servilleta<br>
+    Taza de Cerámica<br>
+    Cuchara de acero inoxidable<br>
+    Untador de acero inoxidable<br>
+    Bocadito de Chocolate y Dulce de Leche<br>
+    Barra de Cereal<br>
+    Porción especial dulce<br>
+    Galletitas dulces artesanales<br>
+    Alfajorcitos de Maicena<br>
+    Pasta Frola<br>
+    Tarta de Coco y Dulce de Leche<br>
+    Brownie</font></td>
+    <td width="329" align="left"><font face="Arial" size="3" color="#FFFFFF">Magdalenas<br>
+    Chocolate Personalizado 9gs.<br>
+    Tostadas<br>
+    Grisines<br>
+    Sandwich de Miga<br>
+    Galletitas de Agua<br>
+    Mermelada en Frasco<br>
+    Dulce de Leche en Frasco<br>
+    Manteca<br>
+    Jugo de Frutas<br>
+    Agua Mineral<br>
+    Leche en sobre<br>
+    Te, Mate Cocido y Café<br>
+    Azúcar y Edulcorante<br>
+    Celofán<br>
+    Moño</font></td>
+  </tr>
+</table>
+</center></div>
+
+<p align="left"><font face="Arial" size="2" color="#FFFFFF"><span style="line-height: -12px"><u>Opcionales:<br>
+</u>Los cuatro desayunos pueden:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; · ir&nbsp; en bandejas rectangulares, circulares o
+en forma de corazón. (sin costo)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+· chocolate personalizado familiar (100Gs) $ 30.-<br>
+<b>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></span></font></p>
+
+<p align="center"><font face="Monotype Corsiva" size="1"><span style="line-height: -12px"><img src="images/chocolate_familiar.jpg" alt="chocolate familiar.jpg (15801 bytes)" WIDTH="279" HEIGHT="187"><font color="#FFFFFF"> &nbsp;</font></span></font></p>
+
+<blockquote>
+  <blockquote>
+    <p><span style="line-height: -12px"><font color="#FFFFFF" face="Monotype Corsiva" size="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#FFFFFF" size="1" face="Arial">&nbsp;&nbsp;</font></span><b><font FACE="Monotype Corsiva" SIZE="4"></p>
+    <p align="center"><a href="desayunos.htm#155388-2247/155333-0155" target="_top"><font face="MS Sans Serif" size="1" color="#400000"><span style="color: rgb(64,0,0); text-decoration: underline; border-top: medium none rgb(64,0,0)"><strong>VOLVER
+    AL INICIO</strong></span></font></a></p>
+  </blockquote>
+</blockquote>
+</font></b>
+
+<p align="center"><marquee style="font-family: Times New Roman; font-size: 14pt; background-color: rgb(0,128,128); color: rgb(255,255,255)" align="middle" border="0" bgcolor="#008080" scrollamount="4" behavior="alternate" width="668" height="21">Publicite aquí!, Ud. también puede ser parte de este gran emprendimiento</marquee></p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center">&nbsp;</p>
+
+<p><font face="Monotype Corsiva" size="4" color="#FFFFFF"><b><i><a name="( 3 ) Desayuno Margon Criollo: ($ 160)">( 3 ) Desayuno Margon Criollo: ($ 
+550) </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="images/Dscn1250CRIOLLO.jpg"><img src="images/Dscn1250CRIOLLO_small.jpg" alt="Dscn1250CRIOLLO.jpg (117111 bytes)" style="border: medium dotted rgb(255,255,255)" border="2" WIDTH="100" HEIGHT="74"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</i></b></font><a href="mailto:mariter4798@ciudad.com.ar,%20vnitz@hotmail.com.ar" style="text-decoration: none; background-color: rgb(128,128,0); color: rgb(128,128,0); border: medium none"><img src="images/HH01580A.gif" alt="HH01580A.gif (1542 bytes)" WIDTH="58" HEIGHT="51"></a><strong><font color="#FFFFFF">pedidos</font></strong></p>
+<div align="center"><center>
+
+<table border="4" width="69%" height="241">
+  <tr>
+    <td width="58%" height="235" align="center"><p align="left"><font color="#FFFFFF" face="Arial" size="3">Bandeja de Madera y Mimbre<br>
+    Individual de Tela<br>
+    Servilleta de Tela<br>
+    &nbsp;Porta Servilleta<br>
+    Mate (modelo según stock)<br>
+    Bombilla (modelo según stock)<br>
+    Yerba Mate<br>
+    Termo (modelo según stock)<br>
+    Cuchara de acero inoxidable<br>
+    Untador de acero inoxidable<br>
+    Bocadito de Chocolate y Dulce de Leche<br>
+    Barra de Cereal<br>
+    Galletitas dulces artesanales<br>
+    Porción especial dulce<br>
+    Palmeritas<br>
+    Medialunas<br>
+    Bizcochitos dulces<br>
+    </font></td>
+    <td width="42%" height="235" align="center"><p align="left"><font color="#FFFFFF" face="Arial" size="3">Ensaimada<br>
+    Cuernitos<br>
+    Pasta Frola<br>
+    Magdalenas<br>
+    Chocolate Personalizado (9gs.)<br>
+    Tostadas<br>
+    Grisines<br>
+    Sandwich de miga<br>
+    Galletitas de Agua<br>
+    Mermelada en Frasco<br>
+    Dulce de Leche en Frasco<br>
+    Manteca<br>
+    Jugo de Frutas<br>
+    Te, Mate Cocido y Café<br>
+    Azúcar y Edulcorante<br>
+    Celofán<br>
+    Moño</font></td>
+  </tr>
+</table>
+</center></div>
+
+<p align="left"><font face="Arial" size="2" color="#FFFFFF"><span style="line-height: -12px"><u>Opcionales:<br>
+</u>Los cuatro desayunos pueden:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+· ir&nbsp; en bandejas rectangulares, circulares o en forma de corazón. (sin costo)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+· chocolate personalizado familiar (100Gs) $ 30.-<br>
+<b>&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</b></span></font></p>
+
+<p align="center"><font face="Monotype Corsiva" size="1"><span style="line-height: -12px"><b><img src="images/chocolate_familiar.jpg" alt="chocolate familiar.jpg (15801 bytes)" WIDTH="279" HEIGHT="187"><font color="#FFFFFF"> &nbsp;</font></b></span></font></p>
+
+<p align="center"><a href="desayunos.htm#155388-2247/155333-0155" target="_top"><font face="MS Sans Serif" size="1" color="#400000"><span style="color: rgb(64,0,0); text-decoration: underline; border-top: medium none rgb(64,0,0)"><strong>VOLVER
+AL INICIO</strong></span></font></a><b><font FACE="Monotype Corsiva" SIZE="4"></p>
+
+<p align="center"></font></b><marquee style="font-family: Times New Roman; font-size: 14pt; background-color: rgb(0,128,128); color: rgb(255,255,255)" align="middle" border="0" bgcolor="#008080" scrollamount="4" behavior="alternate" width="695" height="21">Publicite aquí!, Ud. también puede ser parte de este gran emprendimiento</marquee><b><font FACE="Monotype Corsiva" SIZE="4"></p>
+
+<p align="center"></font></b><a href="index.htm"><small>VOLVER A PAGINA PRINCIPAL</small></a><font face="Monotype Corsiva" size="1"></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p></font><b><a name="( 4 ) Desayuno Margon Doble: ($175)"><font FACE="Monotype Corsiva" SIZE="1" color="#FFFFFF">(</font><font face="Monotype Corsiva" size="4" color="#FFFFFF"> 4
+) Desayuno Margon Doble: ($550)</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="images/doble.jpg"><img src="images/doble_small.jpg" alt="doble.jpg (63517 bytes)" align="center" style="border: medium dotted rgb(255,255,255)" WIDTH="100" HEIGHT="74"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</font></b><a href="mailto:mariter4798@ciudad.com.ar,%20vnitz@hotmail.com.ar" style="text-decoration: none; background-color: rgb(128,128,0); color: rgb(128,128,0); border: medium none"><img src="images/HH01580A.gif" alt="HH01580A.gif (1542 bytes)" WIDTH="58" HEIGHT="51"></a><strong><font color="#FFFFFF">pedidos</font></strong><font face="Monotype Corsiva" size="1"></p>
+</font><div align="center"><center>
+
+<table border="4" width="80%">
+  <tr>
+    <td width="57%"><font color="#FFFFFF" face="Arial" size="3">Bandeja de Madera y Mimbre<br>
+    Individual de Tela <br>
+    Servilleta de Tela (X2)<br>
+    Porta Servilleta (X2)<br>
+    Taza de Cerámica (X2)<br>
+    Cuchara de acero inoxidable (X2)<br>
+    Untador de acero inoxidable<br>
+    Bocadito de Chocolate y Dulce de Leche (X2)<br>
+    Barra de Cereal <br>
+    Porción especial dulce<br>
+    Galletitas dulces artesanales<br>
+    Alfajorcitos de Maicena<br>
+    Cuernitos<br>
+    Pasta Frola<br>
+    Tarta de Coco y Dulce de Leche<br>
+    </font></td>
+    <td width="43%"><font color="#FFFFFF" face="Arial" size="3">Brownie<br>
+    Magdalenas<br>
+    Chocolate Personalizado 9Gs.<br>
+    Tostadas<br>
+    Grisines<br>
+    Sandwich de Miga<br>
+    Galletitas de Agua<br>
+    Mermelada en Frasco<br>
+    Dulce de Leche en Frasco<br>
+    Manteca<br>
+    Jugo de Frutas<br>
+    Agua Mineral<br>
+    Leche en sobre (x2)<br>
+    Te, Mate Cocido y Café<br>
+    Azúcar y Edulcorante<br>
+    Celofán<br>
+    Moño</font></td>
+  </tr>
+</table>
+</center></div>
+
+<blockquote>
+  <blockquote>
+    <p align="left"><font face="Arial" size="2" color="#FFFFFF"><span style="line-height: -12px"><u>Opcionales:<br>
+    </u>Los cuatro desayunos pueden:<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;· ir&nbsp;
+    en bandejas rectangulares, circulares o en forma de corazón. (sin costo)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; · chocolate
+    personalizado familiar (100Gs) $ 30.-<br>
+    <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </b></span></font></p>
+    <p align="center"><font face="Monotype Corsiva" size="1"><span style="line-height: -12px"><img src="images/chocolate_familiar.jpg" alt="chocolate familiar.jpg (15801 bytes)" WIDTH="279" HEIGHT="187"><font color="#FFFFFF"> &nbsp;</font></span></font></p>
+    <blockquote>
+      <blockquote>
+        <font FACE="Monotype Corsiva" SIZE="4"><p><b>&nbsp;</p>
+        <p align="center"></b></font><a href="desayunos.htm#155388-2247/155333-0155" target="_top"><font face="MS Sans Serif" size="1" color="#400000"><span style="color: rgb(64,0,0); text-decoration: underline; border-top: medium none rgb(64,0,0)"><strong>VOLVER
+        AL INICIO</strong></span></font></a><font FACE="Monotype Corsiva" SIZE="4"><b></p>
+        <p align="center"></b></font><marquee style="font-family: Times New Roman; font-size: 14pt; background-color: rgb(0,128,128); color: rgb(255,255,255)" align="middle" border="0" bgcolor="#008080" scrollamount="4" behavior="alternate" width="691" height="21">Publicite aquí!, Ud. también puede ser parte de este gran emprendimiento</marquee><b><font FACE="Monotype Corsiva" SIZE="4"></p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center">&nbsp;</p>
+        <p align="center"><font SIZE="2">&nbsp;</p>
+        </font><p align="left"></font><a name="( 5 ) Desayuno Margon Light: ($ 120) &nbsp;&nbsp;"><font FACE="Monotype Corsiva" SIZE="4" color="#FFFFFF">( </font><font face="Monotype Corsiva" size="5" color="#FFFFFF">5 ) Desayuno Margon Light: ($ 
+		550)</font><font FACE="Monotype Corsiva" SIZE="4"> </a>&nbsp;<a href="images/Desayuligth.jpg"><img src="images/Desayuligth_small.jpg" alt="Desayuligth.jpg (62874 bytes)" border="6" style="border: medium dotted rgb(255,255,255)" WIDTH="100" HEIGHT="75"></a>&nbsp;<a href="mailto:mariter4798@ciudad.com.ar,%20vnitz@hotmail.com.ar" style="text-decoration: none; background-color: rgb(128,128,0); color: rgb(128,128,0); border: medium none"><img src="images/HH01580A.gif" alt="HH01580A.gif (1542 bytes)" WIDTH="58" HEIGHT="51"></a><strong><font color="#FFFFFF">pedidos</font></strong></p>
+        <div align="center"><center><table border="4" width="642" height="182">
+          <tr>
+            </font></b><td width="355" height="176" align="left"><p align="left"><font face="Arial" size="3"><b><font color="#FFFFFF"><span style="line-height: -12px">Bandeja de Madera y
+            Mimbre<br>
+            Individual de Tela &nbsp;<br>
+            Servilleta de Tela<br>
+            Porta Servilleta<br>
+            </span><span style="mso-ansi-language:ES-TRAD">Taza de Cerámica<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Cuchara de acero inoxidable<br>
+            Untador de acero inoxidable<o:p></o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Pancitos de cereales<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Tostadas Light<o:p></o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Mermelada Light en frasco<o:p></o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Dulce de Leche Light en
+            frasco<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Barra de cereal Light<o:p></o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Sándwich de jamon y queso
+            con pan integral<o:p></o:p></span><span style="line-height: -12px"><br>
+            </span></font></b></font></td>
+            <td width="275" height="176" align="left"><font face="Arial" size="3"><b><font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Yogur ser<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Alfajor ser<o:p></o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Jugo Light<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Manzana<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Galletitas dulces Light<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Galletitas de salvado<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Capuchino Light<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Leche en sobre Light<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Te, Mate Cocido<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Edulcorante<o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Celofán <o:p></o:p></span></font><br>
+            <font color="#FFFFFF"><span style="mso-ansi-language:ES-TRAD">Moño<o:p></o:p></span></font><br>
+            </b></font></td>
+            <b><font FACE="Monotype Corsiva" SIZE="4">
+          </tr>
+        </table>
+        </center></div><p align="left"></font></p>
+        <p align="center"></b><a href="desayunos.htm#155388-2247/155333-0155" target="_top"><font face="MS Sans Serif" size="1" color="#400000"><span style="color: rgb(64,0,0); text-decoration: underline; border-top: medium none rgb(64,0,0)"><strong>VOLVER
+        AL INICIO</strong></span></font></a><font FACE="Monotype Corsiva" SIZE="4"><b></p>
+      </blockquote>
+    </blockquote>
+    </b></font>
+  </blockquote>
+</blockquote>
+
+<p align="center"><a href="index.htm" target="_top"><font face="MS Sans Serif" size="1" color="#400000"><span style="color: rgb(64,0,0); text-decoration: underline; border-top: medium none rgb(64,0,0)"><strong>VOLVER
+A PAGINA PRINCIPAL</strong></span></font></a></p>
+
+<p dynamicanimation="fpAnimdropWordFP1" style="position: relative !important; visibility:hidden" align="center" id="fpAnimdropWordFP1" language="Javascript1.2"><marquee style="font-family: Times New Roman; font-size: 14pt; background-color: rgb(0,128,128); color: rgb(255,255,255)" align="middle" border="0" bgcolor="#008080" scrollamount="4" behavior="alternate" width="691" height="21">Publicite aquí!, Ud. también puede ser parte de este gran emprendimiento</marquee></p>
+
+<p align="center"><a href="mailto:info@vivasanmartin.com.ar"><img src="images/mail4.gif" width="32" height="35" alt="COMUNIQUESE CON NOSOTROS" border="0"></a></p>
+</body>
+</html>

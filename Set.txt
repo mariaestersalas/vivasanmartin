@@ -1,0 +1,47 @@
+[DEFAULT]
+CountryList=idragon3d;l2extreme;lin2Hobby;bnbl2;HSC-L2;BattleForDawnC3;ial2.com;lineage2.g1.ro
+DefaultCountry=0
+DefaultServer=2
+DefaultCharacter=3
+DefaultAccount=siebka
+DefaultPassWord=
+[idragon3d]
+LoginServerIP=209.40.96.62
+LoginServerPort=2106
+ProtocolVersion=530
+ServerList=[01]Dragon 15x;[02]Zenith 5x;[03]Nightmare 30x;
+[l2extreme]
+LoginServerIP=128.121.25.131
+LoginServerPort=2106
+ProtocolVersion=530
+ServerList=[01]x35;[02]x35;[03]x7;[04]x7;
+[lin2Hobby]
+LoginServerIP=70.85.221.130
+LoginServerPort=2106
+ProtocolVersion=530
+ServerList=[01]Hobby Server;
+[bnbl2]
+LoginServerIP=83.174.133.10
+LoginServerPort=2106
+ProtocolVersion=419
+ServerList=[01]Bartz;
+[HSC-L2]
+LoginServerIP=70.86.118.2
+LoginServerPort=2106
+ProtocolVersion=530
+ServerList=[01]Bartz;
+[BattleForDawnC3]
+LoginServerIP=84.240.29.205
+LoginServerPort=2106
+ProtocolVersion=530
+ServerList=[01]Battle For Dawn;[02]BeyondC3;
+[ial2.com]
+LoginServerIP=70.86.134.66
+LoginServerPort=2106
+ProtocolVersion=530
+ServerList=[01]Aria;
+[lineage2.g1.ro]
+LoginServerIP=85.204.32.242
+LoginServerPort=2106
+ProtocolVersion=530
+ServerList=[01]G1 Server;
